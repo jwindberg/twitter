@@ -1,4 +1,3 @@
-/** @jsxImportSource jotai-signal */
 //@ts-nocheck
 import React from "react";
 import {useSetAtom} from "jotai";

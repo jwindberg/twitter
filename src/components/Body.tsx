@@ -1,31 +1,33 @@
-/** @jsxImportSource jotai-signal */
 //@ts-nocheck
 import React from "react";
 import Home from "./Home";
 import Profile from "./Profile";
 
-import {context} from "./Twitter";
+import {context, navMap} from "./Twitter";
 import {useAtom} from "jotai/index";
-import INavZone from "../types/INavZone";
-import Explore from "./Explore";
-import Notifications from "./Notifications";
-import Messages from "./Messages";
-import More from "./More";
-import Tweet from "./Tweet";
 
 const Body = () => {
 
     const [useContext, setContext] = useAtom(context);
 
-    const navMap = new Map<string, INavZone>();
+    // const navMap = new Map<string, INavZone>([
+    //         ["home", {zone: "home", displayName: "Home", zone: <Home/>}],
+    //         ["explore", {zone: "explore", displayName: "Explore", zone: <Explore/>}],
+    //         ["notifications", {zone: "notifications", displayName: "Notifications", zone: <Notifications/>}],
+    //         ["messages", {zone: "messages", displayName: "Messages", zone: <Messages/>}],
+    //         ["lists", {zone: "lists", displayName: "Lists", zone: <Lists/>}],
+    //         ["bookMarks", {zone: "bookMarks", displayName: "BookMarks", zone: <BookMarks/>}],
+    //         ["communities", {zone: "communities", displayName: "Communities", zone: <Communities/>}],
+    //         ["verified", {zone: "verified", displayName: "Verified", zone: <Verified/>}],
+    //         ["profile", {zone: "profile", displayName: "Profile", zone: <Profile/>}],
+    //         ["more", {zone: "more", displayName: "More", zone: <More/>}],
+    //         ["tweet", {zone: "tweet", displayName: "Tweet", zone: <Tweet/>}]
+    //     ]
+    // );
 
-    navMap.set("home", {zone: "home", displayName: "Home", component: <Home/>});
-    navMap.set("explore", {zone: "explore", displayName: "Explore", component: <Explore/>});
-    navMap.set("notifications", {zone: "notifications", displayName: "Notifications", component: <Notifications/>});
-    navMap.set("messages", {zone: "messages", displayName: "Messages", component: <Messages/>});
-    navMap.set("profile", {zone: "profile", displayName: "Profile", component: <Profile/>});
-    navMap.set("tweet", {zone: "tweet", displayName: "Tweet", component: <Tweet/>});
-    navMap.set("more", {zone: "more", displayName: "More", component: <More/>});
+    const [useNavMap, setNavMap] = useAtom(navMap);
+
+    // useNavMap.set("home", {zone: "home", displayName: "Home", zone: <Home/>});
 
 
     function getHome() {
@@ -37,7 +39,7 @@ const Body = () => {
     }
 
     function getBody() {
-        const bodyContent = navMap[useContext].component;
+        const bodyContent = useNavMap.get(useContext).zone;
         return <div className="column">
             {bodyContent}
         </div>;
