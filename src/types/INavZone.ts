@@ -1,9 +1,9 @@
-interface INavZone {
+export interface INavZone {
 
     zone: string;
     displayName: string;
     component: any;
-    
+
 }
 
-export default INavZone;
+// export default INavZone;

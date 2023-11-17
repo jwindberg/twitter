@@ -1,48 +1,31 @@
 //@ts-nocheck
 import React from "react";
-import {useSetAtom} from "jotai";
-import {context} from "./Twitter";
 import "../index.css";
+import {contextAtom, navMapAtom} from "../atoms/store";
+import {useAtom} from "jotai/index";
 
 const Navigation = () => {
+    const [context, setContext] = useAtom(contextAtom)
+    const [navMap] = useAtom(navMapAtom);
 
-    const setFilter = useSetAtom(context);
+    function buildNav() {
+
+        const nav = [];
+        navMap.forEach((value, key) => {
+
+            const className = context === key ? "highlight-text" : "text-only";
+
+            nav.push(<li key={key}>
+                <button className={className} onClick={() => setContext(key)}>{value.displayName}</button>
+            </li>);
+        });
+
+        return nav;
+    }
 
     return (<div className="column">
         <ul>
-            <li>
-                <button className="text-only" onClick={() => setFilter("home")}>Home</button>
-            </li>
-            <li>
-                <button className="text-only" onClick={() => setFilter("explore")}>Explore</button>
-            </li>
-            <li>
-                <button className="text-only" onClick={() => setFilter("notifications")}>Notifications</button>
-            </li>
-            <li>
-                <button className="text-only" onClick={() => setFilter("messages")}>Messages</button>
-            </li>
-            <li>
-                <button className="text-only" onClick={() => setFilter("lists")}>Lists</button>
-            </li>
-            <li>
-                <button className="text-only" onClick={() => setFilter("bookMarks")}>BookMarks</button>
-            </li>
-            <li>
-                <button className="text-only" onClick={() => setFilter("communities")}>Communities</button>
-            </li>
-            <li>
-                <button className="text-only" onClick={() => setFilter("verified")}>Verified</button>
-            </li>
-            <li>
-                <button className="text-only" onClick={() => setFilter("profile")}>Profile</button>
-            </li>
-            <li>
-                <button className="text-only" onClick={() => setFilter("more")}>More</button>
-            </li>
-            <li>
-                <button className="text-only" onClick={() => setFilter("tweet")}>Tweet</button>
-            </li>
+            {buildNav()}
         </ul>
     </div>);
 }

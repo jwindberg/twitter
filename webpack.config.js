@@ -3,62 +3,64 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 
 const deps = require("./package.json").dependencies;
 module.exports = {
-  output: {
-    publicPath: "http://localhost:9091/",
-  },
+    output: {
+        publicPath: "http://localhost:9091/",
+    },
 
-  resolve: {
-    extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
-  },
+    devtool: 'source-map',
 
-  devServer: {
-    port: 9091,
-    historyApiFallback: true,
-  },
+    resolve: {
+        extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
+    },
 
-  module: {
-    rules: [
-      {
-        test: /\.m?js/,
-        type: "javascript/auto",
-        resolve: {
-          fullySpecified: false,
-        },
-      },
-      {
-        test: /\.(css|s[ac]ss)$/i,
-        use: ["style-loader", "css-loader", "postcss-loader"],
-      },
-      {
-        test: /\.(ts|tsx|js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
-      },
+    devServer: {
+        port: 9091,
+        historyApiFallback: true,
+    },
+
+    module: {
+        rules: [
+            {
+                test: /\.m?js/,
+                type: "javascript/auto",
+                resolve: {
+                    fullySpecified: false,
+                },
+            },
+            {
+                test: /\.(css|s[ac]ss)$/i,
+                use: ["style-loader", "css-loader", "postcss-loader"],
+            },
+            {
+                test: /\.(ts|tsx|js|jsx)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader",
+                },
+            },
+        ],
+    },
+
+    plugins: [
+        new ModuleFederationPlugin({
+            name: "twitter",
+            filename: "remoteEntry.js",
+            remotes: {},
+            exposes: {},
+            shared: {
+                ...deps,
+                react: {
+                    singleton: true,
+                    requiredVersion: deps.react,
+                },
+                "react-dom": {
+                    singleton: true,
+                    requiredVersion: deps["react-dom"],
+                },
+            },
+        }),
+        new HtmlWebPackPlugin({
+            template: "./src/index.html",
+        }),
     ],
-  },
-
-  plugins: [
-    new ModuleFederationPlugin({
-      name: "twitter",
-      filename: "remoteEntry.js",
-      remotes: {},
-      exposes: {},
-      shared: {
-        ...deps,
-        react: {
-          singleton: true,
-          requiredVersion: deps.react,
-        },
-        "react-dom": {
-          singleton: true,
-          requiredVersion: deps["react-dom"],
-        },
-      },
-    }),
-    new HtmlWebPackPlugin({
-      template: "./src/index.html",
-    }),
-  ],
 };
